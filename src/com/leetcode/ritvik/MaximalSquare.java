@@ -1,21 +1,82 @@
 package com.leetcode.ritvik;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Queue;
 
 /**
  * Created by u6023478 on 12/22/2016.
  */
 public class MaximalSquare {
-    public static void main(String[] args) {
-        char[][] matrix = new char[5][4];
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j<4; j++){
-                matrix[i][j] = 1;
-            }
+    public static class TreeNode {
+     int val;
+
+        @Override
+        public String toString() {
+            return "TreeNode{" +
+                    "val=" + val +
+                    '}';
         }
-        matrix[3][3] = 0;
-        System.out.println(getRange(matrix,1,1,3));
-        //System.out.println(findReach(matrix, 0, 0));
+
+        TreeNode left;
+     TreeNode right;
+     TreeNode(int x) { val = x; }
+ }
+    public static void main(String[] args) {
+        TreeNode node = new TreeNode(-1);
+        node.left = new TreeNode(0);
+        node.right = new TreeNode(3);
+        node.left.left = new TreeNode(-2);
+        node.left.right = new TreeNode(4);
+        node.left.left.left = new TreeNode(8);
+
+        System.out.println(lowestCommonAncestor(node, node.left.left.left,node.left ));
+    }
+
+
+    public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null)
+            return null;
+        Queue<TreeNode> qu = new ArrayDeque<TreeNode>();
+        qu.offer(root);
+        TreeNode res = null;
+
+        while(!qu.isEmpty()){
+            TreeNode n = qu.poll();
+            System.out.println("Checking:"+n.val);
+            if( (n == p && (contains(n.right,q) || contains(n.left,q)))
+                    ||  (n == q && (contains(n.right,p) || contains(n.left,p)))
+                    ){
+                //System.out.println("Result="+n.val);
+                res = n;
+                return res;
+            }
+            else if( (contains(n.left,p) || (contains(n.left,q)))  && (contains(n.right,p) || contains(n.right,q))){
+                //System.out.println("Result="+n.val);
+                res = n;
+                return res;
+
+            }
+            if(n.left !=null)
+                qu.offer(n.left);
+            if(n.right!=null)
+                qu.offer(n.right);
+        }
+
+        return res;
+    }
+
+    static boolean  contains(TreeNode root, TreeNode p){
+        System.out.println("contains : root="+root+" key="+p);
+        if(root == null)
+            return false;
+        if(root == p){
+            System.out.println("returning true for root="+root);
+            return true;
+        }
+
+
+        return (contains(root.left, p) || contains(root.right, p));
     }
 
     public int maximalSquare(char[][] matrix) {
