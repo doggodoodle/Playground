@@ -10,7 +10,11 @@ public class SetTesting {
     static List<Integer> list = new ArrayList<Integer>();
 
     public static void main(String[] args) {
-        
+
+        SetTesting setTesting = new SetTesting();
+
+
+
         for(int j = 0; j<100; j++){
             list.add(j,0);
         }
